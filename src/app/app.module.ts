@@ -16,6 +16,8 @@ import { NbaScoreComponent } from './nba-score/nba-score.component';
 import { NbaTeamResultComponent } from './nba-team-result/nba-team-result.component';
 import { SocreboardPipe } from './Shared/pipe/socreboard.pipe';
 import { BackButtonComponent } from './Shared/components/back-button/back-button.component';
+import {SkeletonModule} from 'primeng/skeleton';
+
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import { BackButtonComponent } from './Shared/components/back-button/back-button
     ButtonModule,
     HttpClientModule,
     CardModule,
+    SkeletonModule
   ],
   providers: [
     ApiService,

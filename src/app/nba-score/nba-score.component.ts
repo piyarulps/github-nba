@@ -31,7 +31,7 @@ export class NbaScoreComponent implements OnInit {
       treakTeamId
     );
     if (!uniqueCheck) {
-      this.service.getTeam(treakTeamId, dateParams).subscribe((res) => {
+       this.service.getTeam(treakTeamId, dateParams).subscribe((res) => {
         const fetchData = this.scoreBoardData(res.data, treakTeamId);
         const teamData: any = this.selectedTeam;
         teamData.results = fetchData.results;
@@ -41,7 +41,7 @@ export class NbaScoreComponent implements OnInit {
         teamData.opptAvgScore = (
           fetchData.opptAvgScore / fetchData.results.length
         ).toFixed(2);
-        this.seelectedAllTeam.unshift(teamData);
+        this.seelectedAllTeam.push(teamData);
         this.service.selectedTeamList = this.seelectedAllTeam;
       });
     }

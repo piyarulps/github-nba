@@ -1,13 +1,10 @@
 <div class="conatiner main-box p-4">
-  <h3 class="flex align-items-center">
-    <app-back-button label="&#x3c;" id="backBtn" class="mr-3"></app-back-button>
-    NBA Score Tracking App
-  </h3>
+  <h3 class="flex align-items-center">NBA Score Tracking App</h3>
 
   <div class="score-board mt-4">
     <div class="grid">
       <div class="col-6" *ngIf="results.length">
-        <p-card [style]="{ width: '32rem' }" styleClass="shadow-2 ">
+        <p-card [style]="{ width: '21rem' }" styleClass="shadow-2 ">
           <ng-template pTemplate="header">
             <div>
               <span class="ml-2 text-900 font-bold"
@@ -39,6 +36,13 @@
               </div>
             </div>
           </div>
+          <ng-template pTemplate="footer">
+            <app-back-button
+              label="&#x3c;"
+              id="backBtn"
+              class="mr-3"
+            ></app-back-button>
+          </ng-template>
         </p-card>
       </div>
     </div>

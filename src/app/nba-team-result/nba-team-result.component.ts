@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { subscribeOn } from 'rxjs';
 import { ApiService } from '../api.service';
@@ -9,9 +9,7 @@ import { TeamList, teamResults } from '../Shared/team.modal';
   templateUrl: './nba-team-result.component.html',
   styleUrls: ['./nba-team-result.component.scss'],
 })
-export class NbaTeamResultComponent implements OnInit, OnDestroy {
-  scoreList: any;
-  private sub: any;
+export class NbaTeamResultComponent implements OnInit {
   public teamCode!: number;
   public results: Array<teamResults> = [];
   public teamdetails: TeamList | undefined;
@@ -21,7 +19,7 @@ export class NbaTeamResultComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {}
   ngOnInit(): void {
-    this.sub = this.route.params.subscribe((params) => {
+    this.route.params.subscribe((params) => {
       this.teamCode = +params['teamCode']; // (+) converts string 'id' to a number
       this.getTeamResult(params['teamCode']);
       this.getTeamDetails(params['teamCode']);
@@ -37,11 +35,5 @@ export class NbaTeamResultComponent implements OnInit, OnDestroy {
     this.service.getTeamResult(teamCode.toString()).subscribe((res) => {
       this.teamdetails = res;
     });
-  }
-  Back() {
-    this.router.navigateByUrl('/');
-  }
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 }
