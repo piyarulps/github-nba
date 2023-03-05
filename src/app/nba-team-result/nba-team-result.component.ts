@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { subscribeOn } from 'rxjs';
 import { ApiService } from '../api.service';
 import { TeamList, teamResults } from '../Shared/team.modal';
 
@@ -12,28 +11,24 @@ import { TeamList, teamResults } from '../Shared/team.modal';
 export class NbaTeamResultComponent implements OnInit {
   public teamCode!: number;
   public results: Array<teamResults> = [];
-  public teamdetails: TeamList | undefined;
+  public teamdetails: TeamList;
   constructor(
     private service: ApiService,
-    private router: Router,
     private route: ActivatedRoute
   ) {}
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.teamCode = +params['teamCode']; // (+) converts string 'id' to a number
+      this.teamCode = params['teamCode'];
       this.getTeamResult(params['teamCode']);
-      this.getTeamDetails(params['teamCode']);
     });
   }
-  getTeamResult(teamCode: number) {
-    const dateParams = this.service.getParams();
-    this.service.getTeam(teamCode, dateParams).subscribe((res) => {
-      this.results = res.data;
-    });
-  }
-  getTeamDetails(teamCode: number) {
-    this.service.getTeamResult(teamCode.toString()).subscribe((res) => {
-      this.teamdetails = res;
+  getTeamResult(teamCode: string) {
+    const data = this.service.selectedTeamList.find(ele => {
+      console.log(ele);
+      if (ele.abbreviation == teamCode) {
+        this.teamdetails = ele;
+        this.results = ele.results;
+      }
     });
   }
 }

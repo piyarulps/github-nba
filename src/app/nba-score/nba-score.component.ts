@@ -31,7 +31,7 @@ export class NbaScoreComponent implements OnInit {
       treakTeamId
     );
     if (!uniqueCheck) {
-       this.service.getTeam(treakTeamId, dateParams).subscribe((res) => {
+      this.service.getTeam(treakTeamId, dateParams).subscribe((res) => {
         const fetchData = this.scoreBoardData(res.data, treakTeamId);
         const teamData: any = this.selectedTeam;
         teamData.results = fetchData.results;
@@ -89,6 +89,6 @@ export class NbaScoreComponent implements OnInit {
     this.service.selectedTeamList = this.seelectedAllTeam;
   }
   resultPage(teamCode: any) {
-    this.router.navigate(['/results', teamCode.id]);
+    this.router.navigate(['/results', teamCode.abbreviation]);
   }
 }

@@ -37,6 +37,7 @@
                 type="button"
                 (click)="closeTeam(i)"
                 icon="pi pi-times"
+                [id]="'remove' + team.abbreviation"
                 class="
                   p-ripple
                   p-button-rounded
@@ -83,6 +84,7 @@
           </div>
           <ng-template pTemplate="footer">
             <p-button
+              [id]="'results' + team.abbreviation"
               (click)="resultPage(team)"
               label="See game results >>"
             ></p-button>
