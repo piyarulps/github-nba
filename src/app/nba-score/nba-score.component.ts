@@ -3,21 +3,20 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ApiService } from '../api.service';
 import { GlobalConst } from '../Shared/globalConst';
-import { teamdetails, TeamList, TeamListDeatils } from '../Shared/team.modal';
+import { TeamList, TeamListDeatils, teamResults } from '../Shared/team.modal';
 
 @Component({
   selector: 'app-nba-score',
   templateUrl: './nba-score.component.html',
   styleUrls: ['./nba-score.component.scss'],
 })
-export class NbaScoreComponent implements OnInit ,OnDestroy{
+export class NbaScoreComponent implements OnInit, OnDestroy {
   public teams: TeamList[] = [];
   public selectedTeam!: TeamList;
   public seelectedAllTeam: Array<TeamListDeatils> = [];
-  public teamdetails: Array<teamdetails> = [];
   public ImgURl: string = GlobalConst.imgURL;
   public fileType: string = GlobalConst.fileType;
-  private subscriptions: Subscription[] = []
+  private subscriptions: Subscription[] = [];
   constructor(private service: ApiService, private router: Router) {
     this.getData();
   }
@@ -33,19 +32,22 @@ export class NbaScoreComponent implements OnInit ,OnDestroy{
       treakTeamId
     );
     if (!uniqueCheck) {
-      this.subscriptions.push((this.service.getTeam(treakTeamId, dateParams).subscribe(res => {
-        const fetchData = this.scoreBoardData(res.data, treakTeamId);
-        const teamData: any = this.selectedTeam;
-        teamData.results = fetchData.results;
-        teamData.selfAvgScore = (
-          fetchData.selfAvgScore / fetchData.results.length
-        ).toFixed(2);
-        teamData.opptAvgScore = (
-          fetchData.opptAvgScore / fetchData.results.length
-        ).toFixed(2);
-        this.seelectedAllTeam.push(teamData);
-        this.service.selectedTeamList = this.seelectedAllTeam;
-      })));
+      this.subscriptions.push(
+        this.service.getTeam(treakTeamId, dateParams).subscribe((res) => {
+          const fetchData = this.scoreBoardData(res.data, treakTeamId);
+          const teamData: TeamListDeatils = this.selectedTeam;
+          teamData.results = fetchData.results;
+          teamData.selfAvgScore = (
+            fetchData.selfAvgScore / fetchData.results.length
+          ).toFixed(2);
+          teamData.opptAvgScore = (
+            fetchData.opptAvgScore / fetchData.results.length
+          ).toFixed(2);
+          this.seelectedAllTeam.push(teamData);
+          console.log(this.seelectedAllTeam);
+          this.service.selectedTeamList = this.seelectedAllTeam;
+        })
+      );
     }
   }
 
@@ -53,10 +55,10 @@ export class NbaScoreComponent implements OnInit ,OnDestroy{
     return arr.some((arrVal) => val === arrVal.id);
   }
 
-  private scoreBoardData(fetchData: any, selectedId: number) {
+  private scoreBoardData(fetchData: Array<teamResults>, selectedId: number) {
     let totalSelfScore = 0;
     let totalOpptScore = 0;
-    fetchData.map((element: any) => {
+    fetchData.map((element: teamResults) => {
       if (element.home_team.id == selectedId) {
         element['self_score'] = element.home_team_score;
         element['selfTeam'] = element.home_team.abbreviation;
@@ -82,18 +84,20 @@ export class NbaScoreComponent implements OnInit ,OnDestroy{
   }
 
   private getData() {
-    this.subscriptions.push(this.service.getTeamList().subscribe((res) => {
-      this.teams = res.data;
-    }));
+    this.subscriptions.push(
+      this.service.getTeamList().subscribe((res) => {
+        this.teams = res.data;
+      })
+    );
   }
   public closeTeam(index: number) {
     this.seelectedAllTeam.splice(index, 1);
     this.service.selectedTeamList = this.seelectedAllTeam;
   }
-  public resultPage(teamCode: any) {
+  public resultPage(teamCode: TeamListDeatils) {
     this.router.navigate(['/results', teamCode.abbreviation]);
   }
-  ngOnDestroy(){
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe())
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }

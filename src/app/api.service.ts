@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment.prod';
 import { APIConst } from './Shared/globalConst';
-import { TeamListDeatils } from './Shared/team.modal';
+import { game, Team, TeamListDeatils } from './Shared/team.modal';
 
 @Injectable({
   providedIn: 'root',
@@ -41,15 +41,15 @@ export class ApiService {
     console.log(this.dates);
     return this.dates;
   }
-  getTeamList(): Observable<any> {
+  getTeamList(): Observable<Team> {
     let url = this.URL + this.teamResultUrlEndpoint;
-    return this.http.get<any>(url);
+    return this.http.get<Team>(url);
   }
-  getTeam(id: number, params: string): Observable<any> {
+  getTeam(id: number, params: string): Observable<game> {
     let url = this.URL + this.teamUrlEndpoint + params;
     let queryParams = new HttpParams();
     queryParams = queryParams.append('team_ids[]', id);
-    return this.http.get<any>(url, {
+    return this.http.get<game>(url, {
       params: queryParams,
     });
   }

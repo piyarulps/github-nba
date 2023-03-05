@@ -1,3 +1,10 @@
+export interface TeamMeta {
+  current_page: number
+  next_page: null
+  per_page: number
+  total_count: number
+  total_pages:number
+}
 export interface TeamList {
   id: number
   abbreviation: string;
@@ -6,7 +13,11 @@ export interface TeamList {
   division: string;
   full_name: string;
   name: string;
+}
 
+export interface Team {
+  data:Array<TeamList>,
+  meta:TeamMeta
 }
 export interface TeamListDeatils{
     id: number
@@ -16,37 +27,31 @@ export interface TeamListDeatils{
     division: string;
     full_name: string;
     name: string;
-    selfAvgScore: number;
-    opptAvgScore: number;
-    results:Array<any>
-  }
-
-  export interface teamdetails{
-    team:TeamList,
-    score:Array<any>;
-  
+    selfAvgScore?: string;
+    opptAvgScore?: string;
+    results?:Array<teamResults>
   }
 
   export interface teamResults {
-    id	:	number;
-    date	:	string;
+    id:	number;
+    date:	string;
     home_team_score	:	number;
-    visitor_team_score	:	number;
-    period	:	number;
+    visitor_team_score:	number;
+    period:	number;
     postseason	:	boolean;
-    season	:	number;
-    status	:	string;
-    time	:	string;
-    visitor_team:home_team;
-    home_team:home_team;
+    season:	number;
+    status:	string;
+    time:	string;
+    visitor_team:TeamList;
+    home_team:TeamList;
+    OpptTeam?:string;
+    selfTeam?: string;
+    self_score?: number;
+    oppt_score?: number;
+  }
+  export interface game {
+    data:Array<teamResults>;
+    meta:TeamMeta;
   }
 
-  export interface home_team {
-    id	:	number
-    abbreviation	:string;
-    city	:string;
-    conference	:string;
-    division	:string;
-    full_name	:string;
-    name	:string;
-  }
+
