@@ -12,19 +12,15 @@ export class NbaTeamResultComponent implements OnInit {
   public teamCode!: number;
   public results: Array<teamResults> = [];
   public teamdetails: TeamList;
-  constructor(
-    private service: ApiService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private service: ApiService, private route: ActivatedRoute) {}
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.teamCode = params['teamCode'];
       this.getTeamResult(params['teamCode']);
     });
   }
-  getTeamResult(teamCode: string) {
-    const data = this.service.selectedTeamList.find(ele => {
-      console.log(ele);
+  private getTeamResult(teamCode: string) {
+    this.service.selectedTeamList.find((ele) => {
       if (ele.abbreviation == teamCode) {
         this.teamdetails = ele;
         this.results = ele.results;

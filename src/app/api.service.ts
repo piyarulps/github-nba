@@ -53,8 +53,4 @@ export class ApiService {
       params: queryParams,
     });
   }
-  getTeamResult(id: string): Observable<any> {
-    let url = this.URL + this.teamResultUrlEndpoint + '/' + id;
-    return this.http.get<any>(url);
-  }
 }

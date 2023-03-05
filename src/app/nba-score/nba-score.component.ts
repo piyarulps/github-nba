@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ApiService } from '../api.service';
 import { GlobalConst } from '../Shared/globalConst';
 import { teamdetails, TeamList, TeamListDeatils } from '../Shared/team.modal';
@@ -9,13 +10,14 @@ import { teamdetails, TeamList, TeamListDeatils } from '../Shared/team.modal';
   templateUrl: './nba-score.component.html',
   styleUrls: ['./nba-score.component.scss'],
 })
-export class NbaScoreComponent implements OnInit {
+export class NbaScoreComponent implements OnInit ,OnDestroy{
   public teams: TeamList[] = [];
   public selectedTeam!: TeamList;
   public seelectedAllTeam: Array<TeamListDeatils> = [];
   public teamdetails: Array<teamdetails> = [];
   public ImgURl: string = GlobalConst.imgURL;
   public fileType: string = GlobalConst.fileType;
+  private subscriptions: Subscription[] = []
   constructor(private service: ApiService, private router: Router) {
     this.getData();
   }
@@ -23,7 +25,7 @@ export class NbaScoreComponent implements OnInit {
     this.seelectedAllTeam = this.service.selectedTeamList;
   }
 
-  trackTeam() {
+  public trackTeam() {
     const dateParams = this.service.getParams();
     const treakTeamId = this.selectedTeam.id;
     const uniqueCheck: boolean = this.checkAvailability(
@@ -31,7 +33,7 @@ export class NbaScoreComponent implements OnInit {
       treakTeamId
     );
     if (!uniqueCheck) {
-      this.service.getTeam(treakTeamId, dateParams).subscribe((res) => {
+      this.subscriptions.push((this.service.getTeam(treakTeamId, dateParams).subscribe(res => {
         const fetchData = this.scoreBoardData(res.data, treakTeamId);
         const teamData: any = this.selectedTeam;
         teamData.results = fetchData.results;
@@ -43,7 +45,7 @@ export class NbaScoreComponent implements OnInit {
         ).toFixed(2);
         this.seelectedAllTeam.push(teamData);
         this.service.selectedTeamList = this.seelectedAllTeam;
-      });
+      })));
     }
   }
 
@@ -80,15 +82,18 @@ export class NbaScoreComponent implements OnInit {
   }
 
   private getData() {
-    this.service.getTeamList().subscribe((res) => {
+    this.subscriptions.push(this.service.getTeamList().subscribe((res) => {
       this.teams = res.data;
-    });
+    }));
   }
-  closeTeam(index: number) {
+  public closeTeam(index: number) {
     this.seelectedAllTeam.splice(index, 1);
     this.service.selectedTeamList = this.seelectedAllTeam;
   }
-  resultPage(teamCode: any) {
+  public resultPage(teamCode: any) {
     this.router.navigate(['/results', teamCode.abbreviation]);
+  }
+  ngOnDestroy(){
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe())
   }
 }
